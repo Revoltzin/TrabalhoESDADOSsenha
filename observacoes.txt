@@ -1,0 +1,8 @@
+OBSERVACOES (SEMPRE COMMITAR QUANDO REALIZAR ALGUMA ALTERACAO E DAR GIT PUSH)
+
+Situação Fila só tem normais : Comportamento Chama normal mesmo na vez da prioritária
+
+Situação Fila só tem prioritárias : Comportamento Chama prioritária mesmo na vez da normal
+
+Situação Fila vazia : Comportamento Posto fica livre esperando
+
