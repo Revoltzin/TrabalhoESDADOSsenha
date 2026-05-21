@@ -6,3 +6,12 @@ Situação Fila só tem prioritárias : Comportamento Chama prioritária mesmo n
 
 Situação Fila vazia : Comportamento Posto fica livre esperando
 
+TipoSenha.java - Enum com NORMAL e PRIORITARIA
+
+Senha.javaGera senhas com código automático (N001, P001...)
+
+FilaPrioritaria.javaFila encadeada — prioritárias entram na frente das normais
+
+PilhaAtendidas.javaPilha encadeada — exibe do topo à base (última → primeira)
+
+Posto.javaGerencia estado de cada posto (LIVRE / OCUPADO / INATIVO)
