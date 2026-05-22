@@ -1,0 +1,51 @@
+// # Entidade senha
+package model;
+
+public class Senha {
+    private static int contadorNormal = 1;
+    private static int contadorPrioritaria = 1;
+
+    private final String codigo;
+    private final TipoSenha tipo;
+
+
+    // Contadores separados para normal e prioritária, cada tipo tem sua própria sequência
+    public Senha(TipoSenha tipo) {
+        this.tipo = tipo;
+        if (tipo == TipoSenha.PRIORITARIA) {
+            
+            // Garante que os numeros identificadores irao ser continuos e diferentes (nao podem ser igual)
+            
+            // O 0 diz "preenche com zero", o 3 diz "mínimo 3 casas", e o d diz "é um número inteiro".
+            
+            this.codigo = String.format("P%03d", contadorPrioritaria++);
+        } else {
+            this.codigo = String.format("N%03d", contadorNormal++);
+        }
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public TipoSenha getTipo() {
+        return tipo;
+    }
+
+    // Ele ja atua como IF ou ELSE diretamente, 
+    // Ele verifica se a senha é prioritária e retorna true ou false.
+    public boolean isPrioritaria() {
+        return tipo == TipoSenha.PRIORITARIA;
+    }
+
+    @Override
+    public String toString() {
+        return codigo;
+    }
+
+// resetarContadores() existe para facilitar os testes
+    public static void resetarContadores() {
+        contadorNormal = 1;
+        contadorPrioritaria = 1;
+    }
+}
