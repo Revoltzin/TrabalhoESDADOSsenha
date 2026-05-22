@@ -1,0 +1,19 @@
+package model;
+
+// enum utilizado ao inves de class : Objetivo simples, nao permitir valores externos apenas
+// os valores declarados 
+public enum TipoSenha {
+// Normal e Prioritaria sao constantes
+    NORMAL("N"),
+    PRIORITARIA("P");
+
+    private final String prefixo;
+
+    TipoSenha(String prefixo) {
+        this.prefixo = prefixo;
+    }
+
+    public String getPrefixo() {
+        return prefixo;
+    }
+}
