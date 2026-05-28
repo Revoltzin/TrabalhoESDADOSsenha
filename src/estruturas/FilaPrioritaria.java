@@ -1,8 +1,7 @@
 package estruturas;
 
-import model.Senha;
-
 import java.util.Random;
+import model.Senha;
 
 // Fila responsavel por controlar a ordem de chamada das senhas.
 //
@@ -40,6 +39,7 @@ public class FilaPrioritaria {
     private int normaisChamadasSeguidas;
 
     // Adiciona uma senha na fila correta, de acordo com o tipo dela.
+    // Adiciona a senha nos seus respectivos lugares
     public void adicionar(Senha senha) {
         if (senha == null) {
             throw new IllegalArgumentException("A senha nao pode ser nula.");
@@ -98,6 +98,7 @@ public class FilaPrioritaria {
             throw new IllegalArgumentException("O gerador aleatorio nao pode ser nulo.");
         }
 
+        // Dar prioridade a prioritaria 
         if (quantidadeNormais > 0 && quantidadePrioritarias > 0) {
             if (random.nextBoolean()) {
                 return removerInicioNormal();
