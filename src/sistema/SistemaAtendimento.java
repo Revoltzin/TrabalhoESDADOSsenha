@@ -170,7 +170,9 @@ public class SistemaAtendimento {
 
         Posto proximoPosto = buscarPostoLivre();
 
-        if (proximoPosto != null && !fila.estaVazia()) {
+        if (fila.estaVazia()) {
+            System.out.println("Nao ha proxima senha aguardando atendimento.");
+        } else if (proximoPosto != null) {
             System.out.println("Proxima senha deve se dirigir ao Posto " + proximoPosto.getNumero());
         } else {
             System.out.println("Nenhum posto livre para a proxima senha no momento.");
