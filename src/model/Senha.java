@@ -8,16 +8,16 @@ public class Senha {
     private final String codigo;
     private final TipoSenha tipo;
 
-
-    // Contadores separados para normal e prioritária, cada tipo tem sua própria sequência
+    // Contadores separados para normal e prioritaria.
+    // Assim, cada tipo de senha tem sua propria sequencia:
+    // N001, N002, N003...
+    // P001, P002, P003...
     public Senha(TipoSenha tipo) {
         this.tipo = tipo;
+
         if (tipo == TipoSenha.PRIORITARIA) {
-            
-            // Garante que os numeros identificadores irao ser continuos e diferentes (nao podem ser igual)
-            
-            // O 0 diz "preenche com zero", o 3 diz "mínimo 3 casas", e o d diz "é um número inteiro".
-            
+            // O 0 diz "preenche com zero", o 3 diz "minimo 3 casas",
+            // e o d diz que o valor formatado e um numero inteiro.
             this.codigo = String.format("P%03d", contadorPrioritaria++);
         } else {
             this.codigo = String.format("N%03d", contadorNormal++);
@@ -32,8 +32,8 @@ public class Senha {
         return tipo;
     }
 
-    // Ele ja atua como IF ou ELSE diretamente, 
-    // Ele verifica se a senha é prioritária e retorna true ou false.
+    // Verifica se a senha e prioritaria.
+    // Retorna true para senha P e false para senha N.
     public boolean isPrioritaria() {
         return tipo == TipoSenha.PRIORITARIA;
     }
@@ -43,7 +43,7 @@ public class Senha {
         return codigo;
     }
 
-// resetarContadores() existe para facilitar os testes
+    // resetarContadores() existe para facilitar testes.
     public static void resetarContadores() {
         contadorNormal = 1;
         contadorPrioritaria = 1;

@@ -1,10 +1,12 @@
 package model;
 
-// enum utilizado ao inves de class : Objetivo simples, nao permitir valores externos apenas
-// os valores declarados 
+// Enum usado para limitar os tipos possiveis de senha.
+// Isso evita valores invalidos, como "VIP", "Comum", "Urgente" etc.
 public enum TipoSenha {
-// Normal e Prioritaria sao constantes
+    // Senha normal, identificada pelo prefixo N.
     NORMAL("N"),
+
+    // Senha prioritaria, identificada pelo prefixo P.
     PRIORITARIA("P");
 
     private final String prefixo;
