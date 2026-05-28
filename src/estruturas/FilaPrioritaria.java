@@ -2,6 +2,8 @@ package estruturas;
 
 import model.Senha;
 
+import java.util.Random;
+
 // Fila responsavel por controlar a ordem de chamada das senhas.
 //
 // A regra principal do enunciado e:
@@ -77,6 +79,38 @@ public class FilaPrioritaria {
         }
 
         return chamarPrioritaria();
+    }
+
+    // Remove uma senha da fila por desistência.
+    //
+    // Este metodo NAO usa chamarProxima(), porque uma desistência não é um
+    // atendimento. Se usasse chamarProxima(), a fila iria alterar o contador
+    // da regra 2N:1P como se a senha tivesse sido realmente chamada.
+    //
+    // Quando existem senhas dos dois tipos, a escolha do tipo removido é
+    // aleatória, simulando qualquer cliente da fila desistindo.
+    public Senha removerDesistenteAleatorio(Random random) {
+        if (estaVazia()) {
+            return null;
+        }
+
+        if (random == null) {
+            throw new IllegalArgumentException("O gerador aleatorio nao pode ser nulo.");
+        }
+
+        if (quantidadeNormais > 0 && quantidadePrioritarias > 0) {
+            if (random.nextBoolean()) {
+                return removerInicioNormal();
+            }
+
+            return removerInicioPrioritaria();
+        }
+
+        if (quantidadeNormais > 0) {
+            return removerInicioNormal();
+        }
+
+        return removerInicioPrioritaria();
     }
 
     // Mostra a proxima senha sem remover da fila.

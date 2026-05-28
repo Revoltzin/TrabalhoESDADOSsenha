@@ -75,7 +75,7 @@ public class SistemaAtendimento {
         }
 
         if (random.nextInt(100) < 20) {
-            Senha desistente = fila.chamarProxima();
+            Senha desistente = fila.removerDesistenteAleatorio(random);
             totalDesistencias++;
 
             System.out.println("Cliente desistiu da senha: " + desistente);
