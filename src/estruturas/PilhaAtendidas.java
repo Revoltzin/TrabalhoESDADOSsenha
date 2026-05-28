@@ -7,7 +7,6 @@ import model.Senha;
 // A estrutura de pilha trabalha com a regra LIFO:
 // Last In, First Out.
 //
-// Em portugues:
 // o ultimo elemento que entra e o primeiro que sai.
 //
 // Isso combina com o requisito do enunciado, que pede para mostrar as senhas
