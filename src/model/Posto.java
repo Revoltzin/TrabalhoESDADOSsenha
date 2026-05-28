@@ -11,11 +11,9 @@ public class Posto {
     public static final int QUANTIDADE_MINIMA_ATIVOS = 3;
 
     // Numero que identifica o posto dentro do sistema.
-    // Como o numero nao deve mudar depois da criacao, ele e final.
     private final int numero;
 
     // Indica se o posto esta disponivel para uso no sistema.
-    // Um posto inativo nao pode receber atendimento.
     private boolean ativo;
 
     // Indica se o posto esta atendendo alguem no momento.
