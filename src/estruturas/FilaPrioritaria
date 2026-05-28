@@ -1,0 +1,5 @@
+package estruturas;
+// # Fila encadeada manual
+public class FilaPrioritaria {
+    
+}

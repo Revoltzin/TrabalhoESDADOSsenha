@@ -1,0 +1,5 @@
+package estruturas;
+// # Pilha encadeada manual
+public class PilhaAtendidas {
+
+}

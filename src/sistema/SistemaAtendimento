@@ -1,0 +1,5 @@
+package sistema;
+// # Lógica principal (regra 2N:1P, simulação)
+public class SistemaAtendimento {
+
+}
