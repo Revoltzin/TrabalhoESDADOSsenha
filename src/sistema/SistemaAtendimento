@@ -1,5 +1,211 @@
 package sistema;
-// # Lógica principal (regra 2N:1P, simulação)
-public class SistemaAtendimento {
 
+import estruturas.FilaPrioritaria;
+import estruturas.PilhaAtendidas;
+import model.Posto;
+import model.Senha;
+import model.TipoSenha;
+
+import java.util.Random;
+
+public class SistemaAtendimento {
+    private final FilaPrioritaria fila;
+    private final PilhaAtendidas pilhaAtendidas;
+    private final Posto[] postos;
+    private final Senha[] senhasEmAtendimento;
+    private final int[] tempoRestante;
+
+    private final Random random;
+    private int totalDesistencias;
+    private int iteracao;
+
+    public SistemaAtendimento() {
+        fila = new FilaPrioritaria();
+        pilhaAtendidas = new PilhaAtendidas();
+        postos = new Posto[Posto.QUANTIDADE_MAXIMA_POSTOS];
+        senhasEmAtendimento = new Senha[Posto.QUANTIDADE_MAXIMA_POSTOS];
+        tempoRestante = new int[Posto.QUANTIDADE_MAXIMA_POSTOS];
+
+        random = new Random();
+
+        for (int i = 0; i < postos.length; i++) {
+            postos[i] = new Posto(i + 1);
+        }
+    }
+
+    public void iniciarSimulacao(int quantidadeIteracoes) {
+        System.out.println("=== SISTEMA DE GERENCIAMENTO DE SENHAS ===");
+
+        for (iteracao = 1; iteracao <= quantidadeIteracoes; iteracao++) {
+            System.out.println("\n--- Iteracao " + iteracao + " ---");
+
+            simularChegadaDeClientes();
+            simularDesistencia();
+            finalizarAtendimentos();
+            alterarPostosDinamicamente();
+            chamarSenhasParaAtendimento();
+            exibirStatus();
+        }
+
+        encerrarAtendimento();
+    }
+
+    private void simularChegadaDeClientes() {
+        int quantidadeChegadas = random.nextInt(3) + 1;
+
+        for (int i = 0; i < quantidadeChegadas; i++) {
+            TipoSenha tipo;
+
+            if (random.nextInt(100) < 30) {
+                tipo = TipoSenha.PRIORITARIA;
+            } else {
+                tipo = TipoSenha.NORMAL;
+            }
+
+            Senha novaSenha = new Senha(tipo);
+            fila.adicionar(novaSenha);
+
+            System.out.println("Nova senha gerada: " + novaSenha + " (" + tipo + ")");
+        }
+    }
+
+    private void simularDesistencia() {
+        if (fila.estaVazia()) {
+            return;
+        }
+
+        if (random.nextInt(100) < 20) {
+            Senha desistente = fila.chamarProxima();
+            totalDesistencias++;
+
+            System.out.println("Cliente desistiu da senha: " + desistente);
+        }
+    }
+
+    private void finalizarAtendimentos() {
+        for (int i = 0; i < postos.length; i++) {
+            if (postos[i].isOcupado()) {
+                tempoRestante[i]--;
+
+                if (tempoRestante[i] <= 0) {
+                    Senha senhaFinalizada = senhasEmAtendimento[i];
+
+                    pilhaAtendidas.empilhar(senhaFinalizada);
+                    postos[i].liberar();
+                    senhasEmAtendimento[i] = null;
+
+                    System.out.println("Atendimento finalizado: " + senhaFinalizada + " no Posto " + postos[i].getNumero());
+                }
+            }
+        }
+    }
+
+    private void alterarPostosDinamicamente() {
+        if (iteracao % 5 != 0) {
+            return;
+        }
+
+        int indice = random.nextInt(postos.length);
+        Posto posto = postos[indice];
+
+        if (posto.isAtivo()) {
+            boolean desativou = posto.desativar();
+
+            if (desativou) {
+                System.out.println("Posto " + posto.getNumero() + " foi desativado.");
+            }
+        } else {
+            posto.ativar();
+            System.out.println("Posto " + posto.getNumero() + " foi ativado.");
+        }
+    }
+
+    private void chamarSenhasParaAtendimento() {
+        while (!fila.estaVazia()) {
+            Posto postoLivre = buscarPostoLivre();
+
+            if (postoLivre == null) {
+                break;
+            }
+
+            Senha senha = fila.chamarProxima();
+
+            postoLivre.ocupar();
+
+            int indicePosto = postoLivre.getNumero() - 1;
+            senhasEmAtendimento[indicePosto] = senha;
+            tempoRestante[indicePosto] = random.nextInt(3) + 1;
+
+            System.out.println("Senha " + senha + " direcionada para o Posto " + postoLivre.getNumero());
+        }
+    }
+
+    private Posto buscarPostoLivre() {
+        for (Posto posto : postos) {
+            if (posto.isLivre()) {
+                return posto;
+            }
+        }
+
+        return null;
+    }
+
+    private void exibirStatus() {
+        System.out.println("\nStatus da simulacao:");
+        System.out.println("Total de pessoas na fila: " + fila.tamanho());
+
+        Senha[] proximas = fila.visualizarProximas(2);
+
+        if (proximas.length == 0) {
+            System.out.println("Proximas senhas: nenhuma senha aguardando.");
+        } else {
+            System.out.print("Proximas senhas: ");
+
+            for (Senha senha : proximas) {
+                System.out.print(senha + " ");
+            }
+
+            System.out.println();
+        }
+
+        Posto proximoPosto = buscarPostoLivre();
+
+        if (proximoPosto != null && !fila.estaVazia()) {
+            System.out.println("Proxima senha deve se dirigir ao Posto " + proximoPosto.getNumero());
+        } else {
+            System.out.println("Nenhum posto livre para a proxima senha no momento.");
+        }
+
+        System.out.println("\nPostos:");
+        for (Posto posto : postos) {
+            System.out.println(posto);
+        }
+
+        System.out.println("Senhas atendidas: " + pilhaAtendidas.tamanho());
+        System.out.println("Desistencias: " + totalDesistencias);
+    }
+
+    private void encerrarAtendimento() {
+        System.out.println("\n=== ENCERRAMENTO DO ATENDIMENTO ===");
+
+        while (!fila.estaVazia() || existePostoOcupado()) {
+            finalizarAtendimentos();
+            chamarSenhasParaAtendimento();
+        }
+
+        System.out.println("Total de senhas atendidas: " + pilhaAtendidas.tamanho());
+        System.out.println("Total de desistencias: " + totalDesistencias);
+
+        pilhaAtendidas.exibirDaUltimaParaPrimeira();
+    }
+
+    private boolean existePostoOcupado() {
+        for (Posto posto : postos) {
+            if (posto.isOcupado()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
