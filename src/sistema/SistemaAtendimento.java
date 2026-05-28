@@ -8,6 +8,8 @@ import model.TipoSenha;
 
 import java.util.Random;
 
+// Classe principal responsavel por controlar toda a simulacao. 
+// Aqui ficam as regras de chegada de clientes, atendimento, desistencias e encerramento.
 public class SistemaAtendimento {
     private final FilaPrioritaria fila;
     private final PilhaAtendidas pilhaAtendidas;
@@ -16,12 +18,20 @@ public class SistemaAtendimento {
     private final int[] tempoRestante;
 
     private final Random random;
-    private int totalDesistencias;
-    private int iteracao;
+    
+    //Contadores: 
+    private int totalDesistencias;  //Guarda o total de desistências 
+    private int iteracao; //Guarda a rodada atual da simulação.
 
+
+    // Construtor principal do sistema. 
+    // Responsavel por inicializar todas as estruturas.
     public SistemaAtendimento() {
-        fila = new FilaPrioritaria();
-        pilhaAtendidas = new PilhaAtendidas();
+
+        fila = new FilaPrioritaria(); // Inicializa fila.
+        pilhaAtendidas = new PilhaAtendidas();// Inicializa pilha.
+        
+        // Cria vetores de controle.
         postos = new Posto[Posto.QUANTIDADE_MAXIMA_POSTOS];
         senhasEmAtendimento = new Senha[Posto.QUANTIDADE_MAXIMA_POSTOS];
         tempoRestante = new int[Posto.QUANTIDADE_MAXIMA_POSTOS];
@@ -33,6 +43,9 @@ public class SistemaAtendimento {
         }
     }
 
+
+    // Metodo principal da simulacao. 
+    // Cada repeticao representa um ciclo do sistema.
     public void iniciarSimulacao(int quantidadeIteracoes) {
         System.out.println("=== SISTEMA DE GERENCIAMENTO DE SENHAS ===");
 
@@ -50,12 +63,15 @@ public class SistemaAtendimento {
         encerrarAtendimento();
     }
 
+    // Simula chegada aleatoria de clientes.
     private void simularChegadaDeClientes() {
         int quantidadeChegadas = random.nextInt(3) + 1;
 
         for (int i = 0; i < quantidadeChegadas; i++) {
             TipoSenha tipo;
 
+            // Define aleatoriamente o tipo da senha. 
+            // 30% de chance de ser prioritaria.
             if (random.nextInt(100) < 30) {
                 tipo = TipoSenha.PRIORITARIA;
             } else {
@@ -69,12 +85,15 @@ public class SistemaAtendimento {
         }
     }
 
+    // Simula clientes desistindo da fila.
     private void simularDesistencia() {
         if (fila.estaVazia()) {
             return;
         }
 
+        // 20% de chance de desistência.
         if (random.nextInt(100) < 20) {
+            // Remove uma senha da fila.
             Senha desistente = fila.removerDesistenteAleatorio(random);
             totalDesistencias++;
 
